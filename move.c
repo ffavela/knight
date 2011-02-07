@@ -1,7 +1,7 @@
-/*move returns 1 if succeds and 0 if it fails*/
+/*mvmun returns 1 if succeds and 0 if it fails*/
 #include"headers.h"
 
-int move(int m, int n, int A, int mchoice, int move, int rev)
+int mvmun(int m, int n, int A, int mchoice, int mvmun, int rev)
 {
 	if (rev == -1)
 		A[m][n]=0;
@@ -44,11 +44,11 @@ int move(int m, int n, int A, int mchoice, int move, int rev)
 			break;
 	}
 
-	if( ( m < 0 || m > COLS) && (n < 0 || n > ROWS) )
+	if( ( m < 0 || m >= COLS) && (n < 0 || n >= ROWS) )
 		return 0;
 
 	if(rev == 1)
-		A[m][n]=move;
+		A[m][n]=mvmun;
 
 	return 1;
 }
