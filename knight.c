@@ -7,6 +7,8 @@ int main(void)
 	int m = 0, n = 0;
 	int M[COLS][ROWS];
 
-	while(mvmun != tot)
-	{
-		move()
+	while(mvmun != tot){
+		for(mchoice = 1; mchoice <= 8; mchoice++)
+			move(m, n, (*M)[ROWS], mchoice, mvnum, rev);
+	}
+}

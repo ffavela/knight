@@ -1,11 +1,19 @@
 /*mvmun returns 1 if succeds and 0 if it fails*/
 #include"headers.h"
 
-int mvmun(int m, int n, int A, int mchoice, int mvmun, int rev)
+int move(int m, int n, int (*A)[ROWS], int mchoice, int mvmun, int rev)
 {
 	if (rev == -1)
 		A[m][n]=0;
 
+	check();
+	if(rev == 1)
+		A[m][n]=mvmun;
+
+	return 1;
+}
+
+int check(){
 	switch (mchoice){
 		case 1:
 			m+=rev*2;
@@ -46,9 +54,4 @@ int mvmun(int m, int n, int A, int mchoice, int mvmun, int rev)
 
 	if( ( m < 0 || m >= COLS) && (n < 0 || n >= ROWS) )
 		return 0;
-
-	if(rev == 1)
-		A[m][n]=mvmun;
-
-	return 1;
 }
