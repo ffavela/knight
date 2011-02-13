@@ -4,7 +4,6 @@
 int main(void)
 {
 	int tot = ROWS*COLS, mvnum = 1;
-	int m = 0, n = 0;
 	int M[COLS][ROWS];
 
 	while(mvmun != tot){

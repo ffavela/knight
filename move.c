@@ -1,57 +1,75 @@
 /*mvmun returns 1 if succeds and 0 if it fails*/
 #include"headers.h"
 
-int move(int m, int n, int (*A)[ROWS], int mchoice, int mvmun, int rev)
+int n = 0, m = 0;
+
+int move(int (*A)[ROWS], int mchoice, int mvmun, int rev)
 {
-	if (rev == -1)
+	int icheck;
+
+	icheck = check();	/*to change correctly m,n in either case*/
+
+	if (rev == -1){
 		A[m][n]=0;
+		mvnum--;
+		commit(m, n);
+		return icheck;
+	}
 
-	check();
-	if(rev == 1)
-		A[m][n]=mvmun;
-
-	return 1;
+	commit();
+	A[m][n]=mvmun++;
+	return icheck;
 }
 
+int mm, nn; /*for use before commiting to the move*/
+
 int check(){
+	mm = m;
+	nn = n;
 	switch (mchoice){
 		case 1:
-			m+=rev*2;
-			n+=rev*1;
+			mm+=rev*2;
+			nn+=rev*1;
 			break;
 		case 2:
-			m+=rev*1;
-			n+=rev*2;
+			mm+=rev*1;
+			nn+=rev*2;
 			break;
 		case 3:
-			m-=rev*1;
-			n+=rev*2;
+			mm-=rev*1;
+			nn+=rev*2;
 			break;
 		case 4:
-			m-=rev*2;
-			n+=rev*1;
+			mm-=rev*2;
+			nn+=rev*1;
 			break;
 		case 5:
-			m-=rev*2;
-			n-=rev*1;
+			mm-=rev*2;
+			nn-=rev*1;
 			break;
 		case 6:
-			m-=rev*1;
-			n-=rev*2;
+			mm-=rev*1;
+			nn-=rev*2;
 			break;
 		case 7:
-			m+=rev*1;
-			n-=rev*2;
+			mm+=rev*1;
+			nn-=rev*2;
 			break;
 		case 8:
-			m+=rev*2;
-			n-=rev*1;
+			mm+=rev*2;
+			nn-=rev*1;
 			break;
 		default:	/*it should not reach this point*/
 			return 0;
 			break;
 	}
 
-	if( ( m < 0 || m >= COLS) && (n < 0 || n >= ROWS) )
+	if( ( mm < 0 || mm >= COLS) && (nn < 0 || nn >= ROWS) )/*check if it's within the board*/
 		return 0;
+}
+
+void commit(void)
+{
+	&m = &mm;
+	&n = &nn;
 }
