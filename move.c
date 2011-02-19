@@ -1,18 +1,16 @@
 #include"headers.h"
 
-static int n = 0, m = 0; 
+static int n = 0, m = 0, rev = 1; 
 
 int move(int (*A)[COLS], int mvmun)
 {
-	int rev;
-	extern int tot;
-	extern int mvchoice[tot]; 
+	extern int tot, mvchoice[tot];
 
 	rev = check(mvchoice[mvnum], (*A)[COLS])
 /*rev ordered by occurrence*/
 	if(rev == 1){
 		commit();
-		A[m][n]=mvnum++;
+		A[m][n]=++mvnum;
 	}else if(rev == 0){
 		rev =  1;/*so that there's no trouble in check*/
 		mvchoice[mvnum]++;
@@ -26,8 +24,8 @@ int move(int (*A)[COLS], int mvmun)
 }
 
 int mm, nn; /*for use before commiting to the move*/
-
-int check(int choice, int (*A)M[COLS]){
+/*returns 1 if ok to move, 0 if it can't and -1 if it must move back*/
+int check(int choice, int (*A)[COLS]){
 	mm = m;
 	nn = n;
 	switch (choice){
@@ -83,8 +81,8 @@ void Mzeroes(int (*A)[COLS])
 {
 	int i, j;
 
-	for(j = 0; j < COLS; j++)
-		for(i = 0; i < ROWS; i++)
+	for(j = 0; j < ROWS; j++)
+		for(i = 0; i < COLS; i++)
 			A[i][j] = 0;
 }
 
@@ -92,7 +90,7 @@ void Aones(int *mvchoice)
 {
 	int k;
 	for(k = 0; k < 64; k++)
-		mvchoice[k] = 1;
+		*mvchoice[k] = 1;
 }
 
 void printb(int (*M)[COLS])
@@ -100,7 +98,7 @@ void printb(int (*M)[COLS])
 	int i,j;
 	for(j = 0; j < ROWS; j++){
 		for(i = 0; i < COLS; i++)
-			printf("%3d", M[i][j]);
+			printf("%3d", M[COLS-i][j]);
 		printf("\n");
 	}
 }
