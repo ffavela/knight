@@ -1,32 +1,36 @@
-/*mvmun returns 1 if succeds and 0 if it fails*/
 #include"headers.h"
 
-int n = 0, m = 0;
+static int n = 0, m = 0; 
 
-int move(int (*A)[ROWS], int mchoice, int mvmun, int rev)
+int move(int (*A)[COLS], int mvmun)
 {
-	int icheck;
+	int rev;
+	extern int tot;
+	extern int mvchoice[tot]; 
 
-	icheck = check();	/*to change correctly m,n in either case*/
-
-	if (rev == -1){
+	rev = check(mvchoice[mvnum], (*A)[COLS])
+/*rev ordered by occurrence*/
+	if(rev == 1){
+		commit();
+		A[m][n]=mvnum++;
+	}else if(rev == 0){
+		rev =  1;/*so that there's no trouble in check*/
+		mvchoice[mvnum]++;
+	}else{	/*that is rev == -1, move back*/
 		A[m][n]=0;
-		mvnum--;
-		commit(m, n);
-		return icheck;
+		mvchoice[mvnum--]=1;
+		++mvchoice[mvnum];	
+		commit();
 	}
-
-	commit();
-	A[m][n]=mvmun++;
-	return icheck;
+	return mvnum;
 }
 
 int mm, nn; /*for use before commiting to the move*/
 
-int check(){
+int check(int choice, int (*A)M[COLS]){
 	mm = m;
 	nn = n;
-	switch (mchoice){
+	switch (choice){
 		case 1:
 			mm+=rev*2;
 			nn+=rev*1;
@@ -59,17 +63,34 @@ int check(){
 			mm+=rev*2;
 			nn-=rev*1;
 			break;
-		default:	/*it should not reach this point*/
-			return 0;
+		default:	
+			return -1;
 			break;
 	}
-
-	if( ( mm < 0 || mm >= COLS) && (nn < 0 || nn >= ROWS) )/*check if it's within the board*/
+	/*check if it's within the board and if the square is free*/
+	if(  mm < 0 || mm >= COLS || nn < 0 || nn >= ROWS || A[mm][nn] != 0)
 		return 0;
+	return 1;
 }
 
 void commit(void)
 {
 	&m = &mm;
 	&n = &nn;
+}
+
+void Mzeroes(int (*A)[COLS])
+{
+	int i, j;
+
+	for(j = 0; j < COLS; j++)
+		for(i = 0; i < ROWS; i++)
+			A[i][j] = 0;
+}
+
+void Aones(int *mvchoice)
+{
+	int k;
+	for(k = 0; k < 64; k++)
+		mvchoice[k] = 1;
 }
