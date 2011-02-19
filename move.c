@@ -94,3 +94,13 @@ void Aones(int *mvchoice)
 	for(k = 0; k < 64; k++)
 		mvchoice[k] = 1;
 }
+
+void printb(int (*M)[COLS])
+{
+	int i,j;
+	for(j = 0; j < ROWS; j++){
+		for(i = 0; i < COLS; i++)
+			printf("%3d", M[i][j]);
+		printf("\n");
+	}
+}
