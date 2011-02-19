@@ -8,9 +8,9 @@ int main(void)
 	
 /*Initialize the arrays*/
 	Aones(mvchoice);
-	Mzeroes(M[ROWS][COLS]);
+	Mzeroes((*M)[COLS]);
 
-	while(mvmun != tot)
+	while(mvnum != tot)
 		mvnum = move((*M)[COLS], mvnum);
 
 	printb((*M)[COLS]);
