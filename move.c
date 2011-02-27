@@ -2,11 +2,9 @@
 
 static int n = 0, m = 0, rev = 1; 
 
-int move(int (*A)[COLS], int mvmun)
+int move(int (*A)[COLS], int mvnum, int *mvchoice)
 {
-	extern int tot, mvchoice[tot];
-
-	rev = check(mvchoice[mvnum], (*A)[COLS])
+	rev = check(mvchoice[mvnum], (&A)[COLS]);
 /*rev ordered by occurrence*/
 	if(rev == 1){
 		commit();
@@ -73,8 +71,8 @@ int check(int choice, int (*A)[COLS]){
 
 void commit(void)
 {
-	&m = &mm;
-	&n = &nn;
+	m = mm;
+	n = nn;
 }
 
 void Mzeroes(int (*A)[COLS])
@@ -90,7 +88,7 @@ void Aones(int *mvchoice)
 {
 	int k;
 	for(k = 0; k < 64; k++)
-		*mvchoice[k] = 1;
+		mvchoice[k] = 1;
 }
 
 void printb(int (*M)[COLS])

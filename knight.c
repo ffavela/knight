@@ -1,4 +1,3 @@
-#include<stdio.h>
 #include"headers.h"
 
 int main(void)
@@ -8,11 +7,11 @@ int main(void)
 	
 /*Initialize the arrays*/
 	Aones(mvchoice);
-	Mzeroes((*M)[COLS]);
+	Mzeroes((&M)[COLS]);
 
 	while(mvnum != tot)
-		mvnum = move((*M)[COLS], mvnum);
+		mvnum = move((&M)[COLS], mvnum, mvchoice);
 
-	printb((*M)[COLS]);
+	printb((&M)[COLS]);
 	return 0;
 }
