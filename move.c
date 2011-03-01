@@ -4,7 +4,7 @@ static int n = 0, m = 0, rev = 1;
 
 int move(int (*A)[COLS], int mvnum, int *mvchoice)
 {
-	rev = check(mvchoice[mvnum], (&A)[COLS]);
+	rev = check(mvchoice[mvnum], A);
 /*rev ordered by occurrence*/
 	if(rev == 1){
 		commit();
@@ -14,6 +14,7 @@ int move(int (*A)[COLS], int mvnum, int *mvchoice)
 		mvchoice[mvnum]++;
 	}else{	/*that is rev == -1, move back*/
 		A[m][n]=0;
+		rev = 1;
 		mvchoice[mvnum--]=1;
 		++mvchoice[mvnum];	
 		commit();
@@ -75,13 +76,15 @@ void commit(void)
 	n = nn;
 }
 
-void Mzeroes(int (*A)[COLS])
+void M_init(int (*A)[COLS])
 {
 	int i, j;
 
 	for(j = 0; j < ROWS; j++)
 		for(i = 0; i < COLS; i++)
 			A[i][j] = 0;
+
+	A[m][n] = 1;
 }
 
 void Aones(int *mvchoice)
@@ -94,9 +97,9 @@ void Aones(int *mvchoice)
 void printb(int (*M)[COLS])
 {
 	int i,j;
-	for(j = 0; j < ROWS; j++){
+	for(j = 1; j <= ROWS; j++){
 		for(i = 0; i < COLS; i++)
-			printf("%3d", M[COLS-i][j]);
+			printf("%3d", M[i][ROWS-j]);
 		printf("\n");
 	}
 }

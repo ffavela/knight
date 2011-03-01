@@ -4,7 +4,7 @@
 
 void printb(int (*A)[COLS]);
 void Aones(int *mvchoice);
-void Mzeroes(int (*A)[COLS]);
+void M_init(int (*A)[COLS]);
 int move(int (*A)[COLS], int mvmun, int mvchoice[]);
 int check(int choice, int (*A)[COLS]);
 void commit(void);
