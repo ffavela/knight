@@ -14,8 +14,8 @@ int move(int (*A)[COLS], int mvnum, int *mvchoice)
 		mvchoice[mvnum]++;
 	}else{	/*that is rev == -1, move back*/
 		A[m][n]=0;
-		rev = 1;
-		mvchoice[mvnum--]=1;
+		mvchoice[mvnum--]=1;/*so the move is not default in check*/
+		rev = check(mvchoice[mvnum], A);/*That is rev=1*/
 		++mvchoice[mvnum];	
 		commit();
 	}
