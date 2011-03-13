@@ -1,9 +1,9 @@
 #include"headers.h"
 
-static int n = 0, m = 0, rev = 1; 
 
 int move(int (*A)[COLS], int mvnum, int *mvchoice)
 {
+	static int n = 0, m = 0, rev = 1; 
 	rev = check(mvchoice[mvnum], A);
 /*rev ordered by occurrence*/
 	if(rev == 1){
@@ -70,10 +70,10 @@ int check(int choice, int (*A)[COLS]){
 	return 1;
 }
 
-void commit(void)
+void commit(int *from_m, int *to_m, int *from_n, int *to_n)
 {
-	m = mm;
-	n = nn;
+	to__m = from_m;
+	to_n = from_n;
 }
 
 void M_init(int (*A)[COLS])
