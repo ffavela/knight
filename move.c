@@ -1,13 +1,12 @@
 #include"headers.h"
 
-
-int move(int (*A)[COLS], int mvnum, int *mvchoice)
+int move(int (*A)[COLS], int mvnum, int *mvchoice, int *pm, int *pn)
 {
-	static int n = 0, m = 0, rev = 1; 
-	rev = check(mvchoice[mvnum], A);
+	struct check_info info;
+	info = check(mvchoice[mvnum], A, pm, pn);
 /*rev ordered by occurrence*/
-	if(rev == 1){
-		commit();
+	if((rev = info.rev) == 1){
+		commit(pm);
 		A[m][n]=++mvnum;
 	}else if(rev == 0){
 		rev =  1;/*so that there's no trouble in check*/
@@ -15,18 +14,20 @@ int move(int (*A)[COLS], int mvnum, int *mvchoice)
 	}else{	/*that is rev == -1, move back*/
 		A[m][n]=0;
 		mvchoice[mvnum--]=1;/*so the move is not default in check*/
-		rev = check(mvchoice[mvnum], A);/*That is rev=1*/
+		rev = check(mvchoice[mvnum], A, pm, pn);/*That is rev=1*/
 		++mvchoice[mvnum];	
 		commit();
 	}
 	return mvnum;
 }
 
-int mm, nn; /*for use before commiting to the move*/
-/*returns 1 if ok to move, 0 if it can't and -1 if it must move back*/
-int check(int choice, int (*A)[COLS]){
-	mm = m;
-	nn = n;
+/*in rev returns 1 if ok to move, 0 if it can't and -1 if it must move back
+ * additionaly returns the tentative new position (mm, nn)*/
+struct check_info check(int choice, int (*A)[COLS], pm, pn){
+	struct check_info report;
+	int *mm , *nn;
+	report.mm = *mm = *pm;
+	report.nn = *nn = *pn;
 	switch (choice){
 		case 1:
 			mm+=rev*2;
@@ -76,7 +77,7 @@ void commit(int *from_m, int *to_m, int *from_n, int *to_n)
 	to_n = from_n;
 }
 
-void M_init(int (*A)[COLS])
+void M_init(int (*A)[COLS], int m, int n)
 {
 	int i, j;
 
