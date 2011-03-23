@@ -2,79 +2,85 @@
 
 int move(int (*A)[COLS], int mvnum, int *mvchoice, int *pm, int *pn)
 {
+	int rev = 1;
 	struct check_info info;
-	info = check(mvchoice[mvnum], A, pm, pn);
+
+	info = check(mvchoice[mvnum], A, *pm, *pn, rev);
 /*rev ordered by occurrence*/
 	if((rev = info.rev) == 1){
-		commit(pm);
-		A[m][n]=++mvnum;
+		commit(info, pm, pn);
+		A[*pm][*pn]=++mvnum;
 	}else if(rev == 0){
 		rev =  1;/*so that there's no trouble in check*/
 		mvchoice[mvnum]++;
 	}else{	/*that is rev == -1, move back*/
-		A[m][n]=0;
+		A[*pm][*pn]=0;
 		mvchoice[mvnum--]=1;/*so the move is not default in check*/
-		rev = check(mvchoice[mvnum], A, pm, pn);/*That is rev=1*/
+		info = check(mvchoice[mvnum], A, *pm, *pn, rev);/*That is rev=1*/
 		++mvchoice[mvnum];	
-		commit();
+		commit(info, pm, pn);
 	}
 	return mvnum;
 }
 
-/*in rev returns 1 if ok to move, 0 if it can't and -1 if it must move back
- * additionaly returns the tentative new position (mm, nn)*/
-struct check_info check(int choice, int (*A)[COLS], pm, pn){
+/*in rev it returns 1 if ok to move, 0 if it can't and -1 if it 
+ * must move back, additionaly returns the tentative 
+ * new position (mm, nn)*/
+struct check_info check(int choice, int (*A)[COLS], int m, int n, int rev){
 	struct check_info report;
-	int *mm , *nn;
-	report.mm = *mm = *pm;
-	report.nn = *nn = *pn;
+	int *mm = &report.mm, *nn = &report.nn;
+	 *mm = m;
+	 *nn = n;
 	switch (choice){
 		case 1:
-			mm+=rev*2;
-			nn+=rev*1;
+			*mm+=rev*2;
+			*nn+=rev*1;
 			break;
 		case 2:
-			mm+=rev*1;
-			nn+=rev*2;
+			*mm+=rev*1;
+			*nn+=rev*2;
 			break;
 		case 3:
-			mm-=rev*1;
-			nn+=rev*2;
+			*mm-=rev*1;
+			*nn+=rev*2;
 			break;
 		case 4:
-			mm-=rev*2;
-			nn+=rev*1;
+			*mm-=rev*2;
+			*nn+=rev*1;
 			break;
 		case 5:
-			mm-=rev*2;
-			nn-=rev*1;
+			*mm-=rev*2;
+			*nn-=rev*1;
 			break;
 		case 6:
-			mm-=rev*1;
-			nn-=rev*2;
+			*mm-=rev*1;
+			*nn-=rev*2;
 			break;
 		case 7:
-			mm+=rev*1;
-			nn-=rev*2;
+			*mm+=rev*1;
+			*nn-=rev*2;
 			break;
 		case 8:
-			mm+=rev*2;
-			nn-=rev*1;
+			*mm+=rev*2;
+			*nn-=rev*1;
 			break;
 		default:	
-			return -1;
+			report.rev = -1;
+			return report;
 			break;
 	}
 	/*check if it's within the board and if the square is free*/
-	if(  mm < 0 || mm >= COLS || nn < 0 || nn >= ROWS || A[mm][nn] != 0)
-		return 0;
-	return 1;
+	if(*mm < 0 || *mm >= COLS || *nn < 0 || *nn >= ROWS || A[*mm][*nn] != 0)
+		report.rev = 0;
+	else
+		report.rev = 1;
+	return report;
 }
 
-void commit(int *from_m, int *to_m, int *from_n, int *to_n)
+void commit(struct check_info info, int *pm, int *pn)
 {
-	to__m = from_m;
-	to_n = from_n;
+	*pm = info.mm;
+	*pn = info.nn;
 }
 
 void M_init(int (*A)[COLS], int m, int n)

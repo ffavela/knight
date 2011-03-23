@@ -4,13 +4,13 @@
 
 struct check_info
 {
-	int rev; /*for knowing if I should reverse commit etc.*/
+	int rev; /*for knowing if I should reverse the commit etc.*/
 	int mm, nn; /*for use before commiting to the move*/
 };
 
 void printb(int (*A)[COLS]);
 void Aones(int *mvchoice);
 void M_init(int (*A)[COLS], int m, int n);
-int move(int (*A)[COLS], int mvmun, int mvchoice[]);
-struct check_info check(int choice, int (*A)[COLS]);
-void commit(void);
+int move(int (*A)[COLS], int mvmun, int mvchoice[], int *pm, int *pn);
+struct check_info check(int choice, int (*A)[COLS], int m, int n, int rev);
+void commit(struct check_info info, int *pm, int *pn);
