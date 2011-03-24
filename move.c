@@ -3,7 +3,7 @@
 int move(int (*A)[COLS], int mvnum, int *mvchoice, int *pm, int *pn)
 {
 	int rev = 1;
-	struct check_info info;
+	INFO info;
 
 	info = check(mvchoice[mvnum], A, *pm, *pn, rev);
 /*rev ordered by occurrence*/
@@ -26,8 +26,8 @@ int move(int (*A)[COLS], int mvnum, int *mvchoice, int *pm, int *pn)
 /*in rev it returns 1 if ok to move, 0 if it can't and -1 if it 
  * must move back, additionaly returns the tentative 
  * new position (mm, nn)*/
-struct check_info check(int choice, int (*A)[COLS], int m, int n, int rev){
-	struct check_info report;
+INFO check(int choice, int (*A)[COLS], int m, int n, int rev){
+	INFO report;
 	int *mm = &report.mm, *nn = &report.nn;
 	 *mm = m;
 	 *nn = n;
@@ -77,7 +77,7 @@ struct check_info check(int choice, int (*A)[COLS], int m, int n, int rev){
 	return report;
 }
 
-void commit(struct check_info info, int *pm, int *pn)
+void commit(INFO info, int *pm, int *pn)
 {
 	*pm = info.mm;
 	*pn = info.nn;

@@ -7,6 +7,7 @@ struct check_info
 	int rev; /*for knowing if I should reverse the commit etc.*/
 	int mm, nn; /*for use before commiting to the move*/
 };
+typedef struct check_info INFO;
 
 void printb(int (*A)[COLS]);
 void Aones(int *mvchoice);
