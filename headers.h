@@ -1,6 +1,9 @@
 #include<stdio.h>
-#define COLS 8
-#define ROWS 8
+#define COLS 	8
+#define ROWS	8
+#define MAXCHOICE	8
+#define MAXDEPTH	3
+#define TRUE_REV	1
 
 struct check_info
 {

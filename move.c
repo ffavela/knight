@@ -8,8 +8,10 @@ int move(int (*A)[COLS], int mvnum, int *mvchoice, int *pm, int *pn)
 	info = check(mvchoice[mvnum], A, *pm, *pn, rev);
 /*rev ordered by occurrence*/
 	if((rev = info.rev) == 1){
+		A[info.mm][info.nn]=++mvnum;
+		if(!rcheck(M, mvnum, MAXDEPTH, info.mm, info.nn, TRUE_REV))
+			mvchoice[mvnum] = 9;/*Move back!!*/
 		commit(info, pm, pn);
-		A[*pm][*pn]=++mvnum;
 	}else if(rev == 0){
 		rev =  1;/*so that there's no trouble in check*/
 		mvchoice[mvnum]++;
@@ -76,7 +78,27 @@ INFO check(int choice, int (*A)[COLS], int m, int n, int rev){
 		report.rev = 1;
 	return report;
 }
+/*checks recursively, returns 1 if ok, 0 if not*/
+int rcheck(int (*A)[COLS], int depth, int rm, int rn, TRUE_REV)
+{
+	int rvalue = 0, move_choice;
+	INFO info;
 
+	if(depth == 0)/*if reached here then it reached a tip and it's not isolated*/
+		return 1;
+
+	for(move_choice = 1; move_choice < MAXCHOICE; move_choice++){
+		info = check(move_choice, A, rm, rn, TRUE_REV);
+		if((rev = info.rev) == 1){
+			A[info.mm][info.nn]=++mvnum;
+			rvalue = rcheck(M, mvnum, depth - 1, info.mm, info.nn);
+			A[info.mm][info.nn]=0;/*every level cleans up after themselves*/
+		}
+	}
+	if(depth == MAXDEPTH)/*the only case it's ok not to move*/
+		return 1;
+	return 0;
+}
 void commit(INFO info, int *pm, int *pn)
 {
 	*pm = info.mm;
