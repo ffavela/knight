@@ -9,8 +9,9 @@ int move(int (*A)[COLS], int mvnum, int *mvchoice, int *pm, int *pn)
 /*rev ordered by occurrence*/
 	if((rev = info.rev) == 1){
 		A[info.mm][info.nn]=++mvnum;
-		if(!rcheck(M, mvnum, MAXDEPTH, info.mm, info.nn, TRUE_REV))
-			mvchoice[mvnum] = 9;/*Move back!!*/
+		if(mvnum - 64 > MAXDEPTH)/*so rcheck won't block finishing*/
+			if(!rcheck(A, MAXDEPTH, info.mm, info.nn))
+				mvchoice[mvnum] = 9;/*Move back!!*/
 		commit(info, pm, pn);
 	}else if(rev == 0){
 		rev =  1;/*so that there's no trouble in check*/
@@ -79,26 +80,28 @@ INFO check(int choice, int (*A)[COLS], int m, int n, int rev){
 	return report;
 }
 /*checks recursively, returns 1 if ok, 0 if not*/
-int rcheck(int (*A)[COLS], int depth, int rm, int rn, TRUE_REV)
+int rcheck(int (*A)[COLS], int depth, int rm, int rn)
 {
-	int rvalue = 0, move_choice;
+	int choices, rmult = 1, rsum = 0;
 	INFO info;
 
-	if(depth == 0)/*if reached here then it reached a tip and it's not isolated*/
-		return 1;
+	if(depth == 0)
+		return 1;/*if reached here then it reached a tip and it's not isolated*/
 
-	for(move_choice = 1; move_choice < MAXCHOICE; move_choice++){
-		info = check(move_choice, A, rm, rn, TRUE_REV);
-		if((rev = info.rev) == 1){
-			A[info.mm][info.nn]=++mvnum;
-			rvalue = rcheck(M, mvnum, depth - 1, info.mm, info.nn);
+	for(choices = 1; choices <= MAXCHOICE; choices++){
+		info = check(choices, A, rm, rn, TRUE_REV);
+		if( info.rev == 1){/*Note: if it can't move then rmult & rsum are preserved*/
+			A[info.mm][info.nn] = depth - MAXDEPTH - 1;/*using neg # to fill array*/
+			rmult*=rcheck(A, depth-1, info.mm, info.nn);
 			A[info.mm][info.nn]=0;/*every level cleans up after themselves*/
-		}
-	}
-	if(depth == MAXDEPTH)/*the only case it's ok not to move*/
-		return 1;
-	return 0;
+			rsum+=1;/*to know if it actually made a move*/
+		}/*if rmult=0 then there was at least 1 isolated square*/
+	}/*if rsum=0 then there was no moves in the respective depth*/
+	if(rmult == 0 || rsum == 0 && depth != MAXDEPTH)/*if depth=MAXDEPTH&&sum=0, ok*/
+		return 0;/*if it made it here then it's a dead end*/
+	return 1;/*if it's here then it's not a tip and this branch is not isolated*/
 }
+
 void commit(INFO info, int *pm, int *pn)
 {
 	*pm = info.mm;
