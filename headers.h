@@ -2,7 +2,7 @@
 #define COLS 	8
 #define ROWS	8
 #define MAXCHOICE	8
-#define MAXDEPTH	2/*amount of times rcheck is called, use at least 2*/
+#define MAXDEPTH	5/*amount of times rcheck is called, use at least 2*/
 #define TRUE_REV	1
 
 struct check_info

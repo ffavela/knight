@@ -10,7 +10,7 @@ int main(void)
 	Aones(mvchoice);
 	M_init(M, m, n);
 
-	while(mvnum < 64)
+	while(mvnum < 50)
 		mvnum = move(M, mvnum, mvchoice, &m, &n);
 
 	printb(M);
