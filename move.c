@@ -2,14 +2,14 @@
 
 int move(int (*A)[COLS], int mvnum, int *mvchoice, int *pm, int *pn)
 {
-	int rev = 1;
+	int rev = 1, test;
 	INFO info;
 
 	info = check(mvchoice[mvnum], A, *pm, *pn, rev);
 /*rev ordered by occurrence*/
 	if((rev = info.rev) == 1){
 		A[info.mm][info.nn]=++mvnum;
-		if(mvnum - 64 > MAXDEPTH)/*so rcheck won't block finishing*/
+		if(64 - mvnum > MAXDEPTH)/*so rcheck won't block finishing*/
 			if(!rcheck(A, MAXDEPTH, info.mm, info.nn))
 				mvchoice[mvnum] = 9;/*Move back!!*/
 		commit(info, pm, pn);
