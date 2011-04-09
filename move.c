@@ -9,8 +9,8 @@ int move(int (*A)[COLS], int mvnum, int *mvchoice, int *pm, int *pn)
 /*rev ordered by occurrence*/
 	if((rev = info.rev) == 1){
 		A[info.mm][info.nn]=++mvnum;
-		if(64 - mvnum > MAXDEPTH)/*so rcheck won't block finishing*/
-			if(!rcheck(A, MAXDEPTH, info.mm, info.nn))
+		if(TOT - mvnum > MAXDEPTH)/*so RocKTopus won't block finishing*/
+			if(!RocKTopus(A, MAXDEPTH, info.mm, info.nn))
 				mvchoice[mvnum] = 9;/*Move back!!*/
 		commit(info, pm, pn);
 	}else if(rev == 0){
@@ -28,7 +28,7 @@ int move(int (*A)[COLS], int mvnum, int *mvchoice, int *pm, int *pn)
 
 /*in rev it returns 1 if ok to move, 0 if it can't and -1 if it 
  * must move back, additionaly returns the tentative 
- * new position (mm, nn)*/
+ * new position (mm, nn), also it returns 2 for RocKTopus (when A[*mm][*nn]<0)*/
 INFO check(int choice, int (*A)[COLS], int m, int n, int rev){
 	INFO report;
 	int *mm = &report.mm, *nn = &report.nn;
@@ -73,35 +73,50 @@ INFO check(int choice, int (*A)[COLS], int m, int n, int rev){
 			break;
 	}
 	/*check if it's within the board and if the square is free*/
-	if(*mm < 0 || *mm >= COLS || *nn < 0 || *nn >= ROWS || A[*mm][*nn] != 0)
+	if(*mm < 0 || *mm >= COLS || *nn < 0 || *nn >= ROWS || A[*mm][*nn] > 0)
 		report.rev = 0;
-	else
+	else if (A[*mm][*nn] == 0)
 		report.rev = 1;
+	else /* that is A[*mm][*nn]<0 */
+		report.rev = 2;
 	return report;
 }
+/*The recursive octopus function (RocKtopus)*/
 /*checks recursively, returns 1 if ok, 0 if not*/
-int rcheck(int (*A)[COLS], int depth, int rm, int rn)
+int RocKTopus(int (*A)[COLS], int depth, int rm, int rn)
 {
-	int choices, rmult = 1, rsum = 0;
+	int choices, rmult = 1, rsum = 0, negs = 0;
 	INFO info;
 
 	if(depth == 0)
-		return 1;/*if reached here then it reached a tip and it's not isolated*/
-
+		return 1;/*it reached a tip and it's not isolated*/
+/*Note: if it can't move then rmult & rsum are preserved*/
 	for(choices = 1; choices <= MAXCHOICE; choices++){
 		info = check(choices, A, rm, rn, TRUE_REV);
-		if( info.rev == 1){/*Note: if it can't move then rmult & rsum are preserved*/
-			A[info.mm][info.nn] = depth - MAXDEPTH - 1;/*using neg # to fill array*/
-			rmult*=rcheck(A, depth-1, info.mm, info.nn);
+		if(info.rev == 1){
+			A[info.mm][info.nn] = depth-MAXDEPTH-1;/*using neg # to fill array*/
+			rmult*=RocKTopus(A, depth-1, info.mm, info.nn);
 			A[info.mm][info.nn]=0;/*every level cleans up after themselves*/
-			rsum+=1;/*to know if it actually made a move*/
-		}/*if rmult=0 then there was at least 1 isolated square*/
-	}/*if rsum=0 then there was no moves in the respective depth*/
-	if(rmult == 0 || rsum == 0 && depth != MAXDEPTH)/*if depth=MAXDEPTH&&sum=0, ok*/
-		return 0;/*if it made it here then it's a dead end*/
-	return 1;/*if it's here then it's not a tip and this branch is not isolated*/
-}
-
+			rsum++;/*to know if it actually made a move*/
+		}else if(info.rev==2)/*if rmult=0 then there was at least 1 isolated square*/
+			negs++;/*it can't move there because of its trayectory*/
+	}/*if rsum=0 then there were no moves in the respective depth*/
+	if(!rmult)
+		return 0;
+	if(depth != MAXDEPTH)
+		if(rmult > 1)/*also implies that rsum >= 1. Note: rmult<=2**rsum */
+			return test(rmult, rsum);/*either 2 or 1*/
+		else if(rsum)/*remembering that here rmult=1*/
+			return 1;
+		else if(negs > 1)/*reached a frustrated tip(rsum=0)*/
+			return 2;
+		else/*rsum=0 && negs=1*/
+			return 0;/*dead end*/
+	if(rmult > 1 && test(rmult, rsum) == 2)/*here depth=MAXDEPTH*/
+		return 0;/*no escape from this route*/
+	return 1;/*it's not a tip and this branch is not isolated*/
+}/*Note: rsum=0 && depth=MAXDEPTH it's ok*/
+/*Note: in the end it always returns either 0 or 1*/
 void commit(INFO info, int *pm, int *pn)
 {
 	*pm = info.mm;
@@ -112,8 +127,8 @@ void M_init(int (*A)[COLS], int m, int n)
 {
 	int i, j;
 
-	for(j = 0; j < ROWS; j++)
-		for(i = 0; i < COLS; i++)
+	for(j = 0; j < COLS; j++)
+		for(i = 0; i < ROWS; i++)
 			A[i][j] = 0;
 
 	A[m][n] = 1;
@@ -122,7 +137,7 @@ void M_init(int (*A)[COLS], int m, int n)
 void Aones(int *mvchoice)
 {
 	int k;
-	for(k = 0; k < 64; k++)
+	for(k = 0; k < TOT; k++)
 		mvchoice[k] = 1;
 }
 
@@ -134,4 +149,13 @@ void printb(int (*M)[COLS])
 			printf("%3d", M[i][ROWS-j]);
 		printf("\n");
 	}
+}
+/*returns 1 if there is a way out or 2 if it's not yet found*/
+test(int num, int tot)
+{
+	while(num && tot--)
+		num/=2;
+	if(num)/*the move possibilities lead to self frustration*/
+		return 2;
+	return 1;/*there's at least one choice with no frustration*/
 }
