@@ -4,7 +4,7 @@
 #define ROWS	8
 #define TOT		(ROWS)*(COLS)
 #define MAXCHOICE	8
-#define MAXDEPTH	5/*amount of times RocKtopus is called, use at least 2*/
+#define MAXDEPTH	2/*amount of times RocKtopus is called, use at least 2*/
 #define TRUE_REV	1
 
 struct check_info

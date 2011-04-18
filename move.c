@@ -98,11 +98,11 @@ int RocKTopus(int (*A)[COLS], int depth, int rm, int rn)
 			rmult*=RocKTopus(A, depth-1, info.mm, info.nn);
 			A[info.mm][info.nn]=0;/*every level cleans up after themselves*/
 			rsum++;/*to know if it actually made a move*/
+			if(!rmult)/*for parallelizing put cond. outside the for*/
+				return 0;
 		}else if(info.rev==2)/*if rmult=0 then there was at least 1 isolated square*/
 			negs++;/*it can't move there because of its trayectory*/
 	}/*if rsum=0 then there were no moves in the respective depth*/
-	if(!rmult)
-		return 0;
 	if(depth != MAXDEPTH)
 		if(rmult > 1)/*also implies that rsum >= 1. Note: rmult<=2**rsum */
 			return test(rmult, rsum);/*either 2 or 1*/
