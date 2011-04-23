@@ -12,14 +12,16 @@ int main(int argc, char *argv[])
 	Aones(mvchoice);
 	M_init(M, m, n);
 
-	while(mvnum){
-		while(mvnum < TOT)
+	while(TRUE){
+		while(mvnum < TOT && mvnum) 
 			mvnum = move(M, mvnum, mvchoice, &m, &n);
+		if(!mvnum)
+			break;
 		printb(M);
 		printf("%d\n", ++i);
 		while(mvnum == TOT)
 			mvnum = move(M, mvnum, mvchoice, &m, &n);
-		//mvchoice[--mvnum] = 9;
+	//	mvchoice[--mvnum] = 9;
 	}
 	return 0;
 }
