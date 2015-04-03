@@ -1,1 +1,27 @@
-Solves the knight's tour.
+Solves the knight's tour. Given a startng point it looks for different
+solutions.
+
+To compile simply do:
+
+$ make
+
+To run, starting from square 3,7:
+
+$ ./knight 3 7
+...
+...
+...[SAMPLE OUPUT]
+  2 39 10 37  8  5 20 17
+ 11 36  1  4 21 18  7 44
+ 40  3 38  9  6 45 16 19
+ 35 12 41 54 15 22 43 46
+ 64 27 14 31 42 55 50 23
+ 13 34 61 26 53 58 47 56
+ 28 63 32 59 30 49 24 51
+ 33 60 29 62 25 52 57 48
+124
+...
+...
+...
+
+If no arguments are given, the tour starts from square 1,1.
