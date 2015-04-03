@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<stdlib.h>
-#define TRUE	1
 #define COLS 	8
 #define ROWS	8
 #define TOT		(ROWS)*(COLS)
