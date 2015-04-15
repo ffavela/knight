@@ -25,3 +25,5 @@ $ ./knight 3 7
 ...
 
 If no arguments are given, the tour starts from square 1,1.
+
+You can change the rectangle dimensions by modifying the headers.h file.
