@@ -1,4 +1,8 @@
-Solves the knight's tour. Given a startng point it looks for different
+This is an old piece of code that I wrote while learning C (The "K&R"
+was my bible at the time). And difficult to grasp concepts (at least to
+me), such as pointers and recursivity, where used in the program.
+
+Solves the knight's tour. Given a starting point it looks for different
 solutions.
 
 To compile simply do:
@@ -27,3 +31,8 @@ $ ./knight 3 7
 If no arguments are given, the tour starts from square 1,1.
 
 You can change the rectangle dimensions by modifying the headers.h file.
+For example, if you want to make a 5x5 board, you alter the COLS and
+rows variables de following way:
+
+#define COLS 	5
+#define ROWS	5
