@@ -1,9 +1,10 @@
+Solves the knight's tour (see
+https://en.wikipedia.org/wiki/Knight%27s_tour). Given a starting point
+it looks for different solutions.
+
 This is an old piece of code that I wrote while learning C (The "K&R"
 was my bible at the time). And difficult to grasp concepts (at least to
 me), such as pointers and recursivity, where used in the program.
-
-Solves the knight's tour. Given a starting point it looks for different
-solutions.
 
 To compile simply do:
 
