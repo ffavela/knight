@@ -6,6 +6,16 @@ This is an old piece of code that I wrote while learning C (The "K&R"
 was my bible at the time). And difficult to grasp concepts (at least to
 me), such as pointers and recursivity, where used in the program.
 
+To those unfamiliar with git, simply do a:
+
+$ git clone https://github.com/ffavela/knight
+
+In the terminal and you have just downloaded the code. You now do a:
+
+$ cd knight/
+
+To switch to the directory.
+
 To compile simply do:
 
 $ make
@@ -28,6 +38,8 @@ $ ./knight 3 7
 ...
 ...
 ...
+
+To stop it just do a control C "CTRL-C".
 
 If no arguments are given, the tour starts from square 1,1.
 
