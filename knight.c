@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 {
 	int m=0, n=0;
 	int mvnum = 1, i=0;
-	int M[ROWS][COLS], mvchoice[TOT+1];/*mvchoice[0] is not used... yet
+	int M[ROWS][COLS], mvchoice[TOT+1];/*mvchoice[0] is not used... yet*/
 	if(argc==3)
 		m=atoi(argv[1])-1, n=atoi(argv[2])-1;
 	
